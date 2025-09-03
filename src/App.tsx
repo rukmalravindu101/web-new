@@ -45,7 +45,7 @@ function App() {
   const redirectUserToDashboard = (userData: User) => {
     switch (userData.role) {
       case 'consumer':
-        // Consumer users go to service dashboard
+        // Consumer users go directly to service dashboard
         setCurrentView('dashboard');
         break;
         
@@ -313,15 +313,17 @@ function App() {
   const handleHomeNavigation = () => {
     if (user) {
       switch (user.role) {
+        case 'consumer':
+          setCurrentView('dashboard');
+          break;
         case 'vehicle_owner':
           setCurrentView('vehicle-management');
           break;
         case 'material_supplier':
           setCurrentView('vehicle-management'); // This will show material management for material suppliers
           break;
-        case 'consumer':
         default:
-          setCurrentView('home');
+          setCurrentView('dashboard');
           break;
       }
     } else {
@@ -349,11 +351,35 @@ function App() {
   const renderCurrentView = () => {
     switch (currentView) {
       case 'home':
-        return <HomePage onLogin={() => setShowAuthModal(true)} onSignUp={() => setCurrentView('signup')} />;
+        return user && user.role === 'consumer' ? (
+          <ServiceDashboard 
+            user={user}
+            onVehicleService={() => setCurrentView('vehicle-listing')}
+            onMaterialService={() => setCurrentView('material-listing')}
+          />
+        ) : (
+          <HomePage onLogin={() => setShowAuthModal(true)} onSignUp={() => setCurrentView('signup')} />
+        );
       case 'vehicles':
-        return <GuestVehiclePage onSignUp={() => setCurrentView('signup')} />;
+        return user && user.role === 'consumer' ? (
+          <ServiceDashboard 
+            user={user}
+            onVehicleService={() => setCurrentView('vehicle-listing')}
+            onMaterialService={() => setCurrentView('material-listing')}
+          />
+        ) : (
+          <GuestVehiclePage onSignUp={() => setCurrentView('signup')} />
+        );
       case 'materials':
-        return <GuestMaterialPage onSignUp={() => setCurrentView('signup')} />;
+        return user && user.role === 'consumer' ? (
+          <ServiceDashboard 
+            user={user}
+            onVehicleService={() => setCurrentView('vehicle-listing')}
+            onMaterialService={() => setCurrentView('material-listing')}
+          />
+        ) : (
+          <GuestMaterialPage onSignUp={() => setCurrentView('signup')} />
+        );
       case 'about':
         return <AboutPage />;
       case 'contact':

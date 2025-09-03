@@ -36,10 +36,7 @@ export const Header: React.FC<HeaderProps> = ({
       switch (user.role) {
         case 'consumer':
           return [
-            { id: 'home', label: 'Home' },
             { id: 'dashboard', label: 'Dashboard' },
-            { id: 'vehicles', label: 'Vehicles' },
-            { id: 'materials', label: 'Materials' },
             { id: 'about', label: 'About' },
             { id: 'contact', label: 'Contact' }
           ];
